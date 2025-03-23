@@ -1,0 +1,22 @@
+/* ==========================================================================
+Main page styles
+========================================================================== */
+.form-reset-password-finish {
+    width: 50%;
+    margin: auto;
+    background: #f1f1f1;
+    border-radius: 10px;
+    .ant-form {
+      padding: 40px;
+    }
+    .forgot {
+      cursor: pointer;
+      display: flex;
+      justify-content: right;
+      &:hover,
+      &:active {
+        color: var(--bs-blue);
+      }
+    }
+  }
+  

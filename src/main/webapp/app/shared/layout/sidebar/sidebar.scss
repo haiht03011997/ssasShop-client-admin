@@ -1,0 +1,20 @@
+.sidebar {
+  height: 100%;
+  .item-router {
+    text-decoration: none;
+  }
+}
+
+.brand-logo {
+  &:hover {
+    text-decoration: none;
+  }
+  .brand-icon {
+    display: flex;
+    justify-content: center;
+    height: 60px;
+    img {
+      width: 190px;
+    }
+  }
+}

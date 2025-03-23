@@ -1,0 +1,27 @@
+.ant-btn {
+  display: flex;
+  justify-content: center;
+  align-items: center;
+  font-size: $font-size-sm;
+}
+
+/*helper custom button antd*/
+
+@mixin antd-btn($class, $color, $background-color, $hover-background-color) {
+  .#{$class} {
+    background-color: $background-color;
+    color: $color;
+
+    &:hover {
+      color: $background-color !important;
+      background-color: $hover-background-color !important;
+      border-color: $background-color !important;
+    }
+  }
+}
+
+@include antd-btn('warning', #ffffff, #faad14, #faad14);
+@include antd-btn('export', $white, $green, $white);
+@include antd-btn('primary', $white, $blue, $white);
+@include antd-btn('secondary', $white, $secondary, $white);
+@include antd-btn('green', $white, $green, $white);

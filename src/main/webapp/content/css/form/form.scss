@@ -1,0 +1,25 @@
+.form {
+  overflow-y: auto;
+  .action {
+    display: flex;
+    align-items: center;
+    gap: 10px;
+  }
+  .ant-form-item {
+    margin-bottom: 8px !important;
+    .ant-form-item-label {
+      padding: 0 0 5px;
+      font-weight: $font-weight-bold;
+      label {
+        height: auto;
+      }
+    }
+  }
+}
+.ant-form-item {
+  margin-bottom: 0;
+}
+.ant-input-outlined[disabled],
+.ant-input-number-disabled {
+  color: #000000e0 !important;
+}

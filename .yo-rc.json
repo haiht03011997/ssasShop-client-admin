@@ -1,0 +1,20 @@
+{
+  "generator-jhipster": {
+    "baseName": "QLKH",
+    "clientFramework": "react",
+    "clientTestFrameworks": [],
+    "clientTheme": "none",
+    "creationTimestamp": 1710908961371,
+    "devServerPort": 9060,
+    "enableTranslation": true,
+    "entities": [],
+    "jhipsterVersion": "8.1.0",
+    "languages": ["vi", "en"],
+    "microfrontend": null,
+    "microfrontends": [],
+    "nativeLanguage": "vi",
+    "skipServer": true,
+    "testFrameworks": [],
+    "withAdminUi": true
+  }
+}

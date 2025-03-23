@@ -1,0 +1,101 @@
+.view {
+  .action {
+    display: flex;
+    justify-content: center;
+    align-items: center;
+    gap: 10px;
+    .action-edit {
+      color: var(--bs-blue);
+      cursor: pointer;
+    }
+    .action-delete {
+      color: var(--bs-red);
+      cursor: pointer;
+    }
+  }
+  .table {
+    overflow: auto;
+    .header {
+      display: flex;
+      justify-content: space-between;
+      align-items: center;
+      .search {
+        width: 100%;
+      }
+    }
+  }
+}
+.ant-table-wrapper {
+  .indent-level-1 ~ .ant-dropdown-trigger {
+    margin-left: 3rem;
+  }
+  .ant-table-thead {
+    line-height: 1;
+  }
+  .ant-table-body {
+    overflow: auto;
+    // Media query for extra large screens
+    @media (max-height: #{$large-screen}) {
+      max-height: 64vh !important;
+    }
+    // Media query for large screens
+    @media (max-height: #{$medium-large-screen}) {
+      max-height: 57vh !important;
+    }
+    // Media query for medium screens
+    @media (max-height: #{$medium-screen}) {
+      max-height: 48vh !important;
+    }
+    @media (max-height: #{$small-screen}) {
+      max-height: 21vh !important;
+    }
+  }
+}
+
+.org-chart {
+  display: flex;
+  flex-direction: column;
+  align-items: center;
+}
+.org-nodes {
+  display: flex;
+  position: relative;
+}
+.org-node {
+  border: 1px solid black;
+  padding: 5px;
+  margin: 5px;
+  position: relative;
+}
+.org-node::before {
+  content: '-';
+  position: absolute;
+  border: 1px solid black;
+  top: 0;
+  left: -50px; /* Điều chỉnh vị trí đầu đường thẳng */
+  height: 100%;
+  width: 50px; /* Chiều dài của đường thẳng */
+  z-index: -1;
+}
+.org-node:first-child::before {
+  display: none; /* Ẩn đường thẳng của node đầu tiên */
+}
+
+.custom-table {
+  tr {
+    min-height: 54px;
+    border-color: inherit;
+    border-style: solid;
+    border-width: 0;
+    td {
+      position: relative;
+      padding: 16px 16px;
+      overflow-wrap: break-word;
+      border-inline-end: 1px solid #f0f0f0;
+      transition:
+        background 0.2s,
+        border-color 0.2s;
+      border-bottom: 1px solid #f0f0f0;
+    }
+  }
+}

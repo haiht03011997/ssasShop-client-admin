@@ -1,0 +1,297 @@
+/* global styles for org-chart */
+.org-chart-container {
+  box-sizing: border-box;
+  position: relative;
+  overflow: auto;
+  text-align: center;
+}
+
+.org-chart {
+  box-sizing: border-box;
+  display: inline-block;
+}
+
+.org-chart ul {
+  padding-left: 0;
+  text-align: center;
+  display: flex;
+  margin: 0;
+  transition:
+    transform 0.3s,
+    opacity 0.3s;
+}
+
+.org-chart ul li {
+  display: inline-block;
+  position: relative;
+}
+
+/* excluding root node */
+.org-chart > ul > li > ul li::before {
+  content: '';
+  position: absolute;
+  top: -11px;
+  left: 0;
+  width: 100%;
+  height: 1px;
+  box-sizing: border-box;
+  background-color: $gray-500;
+}
+
+.org-chart > ul > li > ul li.isSiblingsCollapsed::before {
+  content: none;
+}
+
+.org-chart > ul > li > ul li:first-child::before {
+  left: calc(50% - 1px);
+  width: calc(50% + 1px);
+}
+
+.org-chart > ul > li > ul li:last-child::before {
+  width: 50%;
+}
+
+.org-chart > ul > li > ul li:only-child::before {
+  width: 2px;
+}
+.org-chart ul li .oc-node {
+  box-sizing: border-box;
+  display: inline-block;
+  position: relative;
+  padding: 2px;
+  border: 2px solid transparent;
+  margin-bottom: 20px;
+}
+
+/* excluding root node */
+.org-chart > ul > li > ul li > .oc-node::before {
+  content: '';
+  position: absolute;
+  top: -11px;
+  left: calc(50% - 1px);
+  height: 9px;
+  width: 1px;
+  background-color: $gray-500;
+}
+
+.org-chart > ul > li > ul li.isSiblingsCollapsed > .oc-node::before {
+  top: -13px;
+  height: 11px;
+}
+
+.org-chart > ul > li > ul li.isAncestorsCollapsed > .oc-node::before {
+  content: none;
+}
+
+/* excluding leaf node */
+.org-chart ul li .oc-node:not(:only-child)::after {
+  content: '';
+  position: absolute;
+  bottom: -11px;
+  left: calc(50% - 1px);
+  height: 9px;
+  width: 1px;
+  background-color: $gray-500;
+}
+
+.org-chart ul li .oc-node.isChildrenCollapsed:not(:only-child)::after {
+  content: none;
+}
+
+.org-chart ul li .oc-node .oc-heading {
+  box-sizing: border-box;
+  padding: 2px 10px;
+  margin: 0;
+  width: 260px;
+  min-height: 40px;
+  text-align: center;
+  font-weight: bold;
+  overflow: hidden;
+  text-overflow: ellipsis;
+  color: $white;
+  border-radius: 4px 4px 0 0;
+}
+
+.org-chart ul li .oc-node .oc-heading .oc-symbol {
+  float: left;
+  margin-top: 12px;
+  margin-left: 2px;
+}
+
+.org-chart ul li .oc-node .oc-heading .oc-symbol::before {
+  background-color: #fff;
+  border-color: rgba(217, 83, 79, 0.8);
+}
+
+.org-chart ul li .oc-node .oc-heading .oc-symbol::after {
+  background-color: #fff;
+}
+
+.oc-node ~ .oc-action {
+  position: absolute;
+  top: 0;
+  right: -20px;
+}
+.org-chart ul li .oc-node .oc-content {
+  transition: max-height 0.3s ease-in-out;
+  overflow: hidden;
+  box-sizing: border-box;
+  padding: 2px;
+  width: 260px;
+  min-height: 80px;
+  border-radius: 0 0 4px 4px;
+  color: $black;
+  text-align: center;
+  text-overflow: ellipsis;
+  .oc-button-arrow-down {
+    cursor: pointer;
+    position: absolute;
+    bottom: 0;
+    left: calc(50% - 0.3rem);
+  }
+  .oc-button-arrow-up {
+    @extend .oc-button-arrow-down;
+    bottom: -6px;
+  }
+}
+
+/* styles for edges */
+.org-chart .oc-node .oc-edge {
+  position: absolute;
+  cursor: default;
+  transition: 0.2s;
+}
+
+.org-chart .oc-node .oc-edge::before {
+  border-color: rgba(68, 157, 68, 0.5);
+}
+
+.org-chart.noncollapsable .oc-node .oc-edge {
+  display: none;
+}
+
+.org-chart .oc-node .oc-edge:hover {
+  cursor: pointer;
+}
+
+.org-chart .oc-edge:hover::before {
+  border-color: #449d44;
+}
+
+.org-chart .oc-node .verticalEdge {
+  width: calc(100% - 6px);
+  width: -webkit-calc(100% - 6px);
+  width: -moz-calc(100% - 6px);
+  height: 10px;
+  left: 3px;
+}
+
+.org-chart .oc-node .verticalEdge::before {
+  position: absolute;
+  left: calc(50% - 0.3125rem);
+}
+
+.org-chart .oc-node .topEdge {
+  top: -2px;
+}
+
+.org-chart .oc-node .topEdge.oci-chevron-up::before {
+  top: 2px;
+}
+
+.org-chart .oc-node .topEdge.oci-chevron-down::before {
+  bottom: 3px;
+}
+
+.org-chart .oc-node .bottomEdge {
+  bottom: -2px;
+}
+
+.org-chart .oc-node .bottomEdge.oci-chevron-up::before {
+  bottom: -3px;
+}
+
+.org-chart .oc-node .bottomEdge.oci-chevron-down::before {
+  bottom: 1px;
+}
+
+.org-chart .oc-node .horizontalEdge {
+  width: 10px;
+  height: calc(100% - 6px);
+  height: -webkit-calc(100% - 6px);
+  height: -moz-calc(100% - 6px);
+  top: 3px;
+}
+
+.org-chart .oc-node .rightEdge {
+  right: -2px;
+}
+
+.org-chart .oc-node .leftEdge {
+  left: -2px;
+}
+
+.org-chart .oc-node .horizontalEdge::before {
+  position: absolute;
+  top: calc(50% - 0.3125rem);
+}
+
+.org-chart .oc-node .rightEdge.oci-chevron-left::before {
+  right: -3px;
+}
+
+.org-chart .oc-node .rightEdge.oci-chevron-right::before {
+  right: 1px;
+}
+
+.org-chart .oc-node .leftEdge.oci-chevron-right::before {
+  left: -3px;
+}
+
+.org-chart .oc-node .leftEdge.oci-chevron-left::before {
+  left: 1px;
+}
+
+/* slide animations */
+.org-chart .slide-up {
+  opacity: 0;
+  transform: translateY(-40px);
+}
+
+.org-chart .slide-down {
+  opacity: 0;
+  transform: translateY(40px);
+}
+
+.org-chart .slide-left {
+  opacity: 0;
+  transform: translateX(-130px);
+}
+
+.org-chart .slide-right {
+  opacity: 0;
+  transform: translateX(130px);
+}
+
+// Define a mixin to generate color classes
+@mixin oc-content-colors {
+  $colors: #4e542b36, $pink-100, $teal, $brow-700, $cyan-100; // Example color list
+  @for $i from 1 through length($colors) {
+    .oc-content-color-#{$i} {
+      border: 1px solid nth($colors, $i);
+      background-color: nth($colors, $i);
+    }
+  }
+}
+
+@mixin oc-heading-colors {
+  $colors: #4e542b, $pink-800, $green, $brow-500, $dark-500; // Example color list
+  @for $i from 1 through length($colors) {
+    .oc-heading-color-#{$i} {
+      background-color: nth($colors, $i);
+    }
+  }
+}
+
+@include oc-content-colors; // Include the mixin to generate the classes
+@include oc-heading-colors; // Include the mixin to generate the classes
