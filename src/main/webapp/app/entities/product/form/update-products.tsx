@@ -1,17 +1,17 @@
-import { Button, Col, Form, Input, InputNumber, Modal, Row, Upload, Image, UploadFile, Select } from 'antd';
-import ReactQuill from 'react-quill';
-import 'react-quill/dist/quill.snow.css';
 import { PlusOutlined } from '@ant-design/icons';
+import { Button, Col, Form, Input, InputNumber, Modal, Row, Select, Upload } from 'antd';
 import Title from 'antd/es/typography/Title';
 import { useAppDispatch, useAppSelector } from 'app/config/store';
+import { getAllEntities as getSelectOptionCategory } from 'app/entities/category/category.reducer';
+import { getAllEntities as getSelectOptionDuration } from 'app/entities/duration/duration.reducer';
+import { formatCurrencyVND, parseCurrencyVND } from 'app/shared/util/help';
+import { filterOption } from 'app/shared/util/select-filter';
 import React, { useEffect, useMemo, useState } from 'react';
+import ReactQuill from 'react-quill';
+import 'react-quill/dist/quill.snow.css';
 import { Container } from 'reactstrap';
 import { createEntity, getEntity, updateEntity } from '../product.reducer';
-import TextArea from 'antd/es/input/TextArea';
-import { formatCurrencyVND, getBase64, parseCurrencyVND } from 'app/shared/util/help';
-import './style.scss'
-import { getAllEntities } from 'app/entities/category/category.reducer';
-import { filterOption } from 'app/shared/util/select-filter';
+import './style.scss';
 type IUpdateProducts = {
   isOpen: boolean;
   onClose: (isReload?: boolean) => void;
@@ -27,12 +27,13 @@ export const ProductsUpdate = React.memo(({ isOpen, onClose, id }: IUpdateProduc
   const updating = useAppSelector(state => state.products.updating);
   const updateSuccess = useAppSelector(state => state.products.updateSuccess);
   const categoriesOption = useAppSelector(state => state.categories.options);
+  const durationsOption = useAppSelector(state => state.durations.options);
 
   // initialize state
-  const [previewOpen, setPreviewOpen] = useState(false);
-  const [previewImage, setPreviewImage] = useState('');
+  const [fileList, setFileList] = useState([]);
 
   const handleClose = () => {
+    setFileList([]);
     form.resetFields();
     onClose(updateSuccess);
   };
@@ -45,6 +46,8 @@ export const ProductsUpdate = React.memo(({ isOpen, onClose, id }: IUpdateProduc
         ["bold", "italic", "underline"],
         [{ list: "ordered" }, { list: "bullet" }],
         ["link", "image"],
+        [{ color: [] }, { background: [] }], // Chọn màu chữ & màu nền
+        [{ align: [] }], // Căn trái, phải, giữa, justify
       ],
     },
   }), []);
@@ -62,11 +65,14 @@ export const ProductsUpdate = React.memo(({ isOpen, onClose, id }: IUpdateProduc
   useEffect(() => {
     if (productsEntity && !isNew) {
       form.setFieldsValue(productsEntity);
+      if (productsEntity?.imageUrl)
+        if (productsEntity?.imageUrl) { setFileList([{ url: `${SERVER_API}${productsEntity.imageUrl}` }]) }
     }
   }, [productsEntity]);
 
   const innitData = () => {
-    dispatch(getAllEntities())
+    dispatch(getSelectOptionCategory())
+    dispatch(getSelectOptionDuration())
     // get detail
     if (isNew) {
       form.resetFields();
@@ -97,18 +103,15 @@ export const ProductsUpdate = React.memo(({ isOpen, onClose, id }: IUpdateProduc
     }
   };
 
-  const handlePreviewImage = async (file: UploadFile) => {
-    if (!file.url && !file.preview) {
-      file.preview = await getBase64(file.originFileObj as any);
+  const handleChangeImage = ({ fileList: newArrays }) => {
+    if (newArrays && newArrays.length > 0) {
+      // Lưu giá trị vào Form.Item bằng setFieldsValue
+      form.setFieldsValue({ file: newArrays[0].originFileObj });
+      setFileList(newArrays[0].url || (newArrays[0].preview as string));
     }
 
-    setPreviewImage(file.url || (file.preview as string));
-    setPreviewOpen(true);
-  };
-
-  const handleChangeImage = ({ fileList }) => {
-    // Lưu giá trị vào Form.Item bằng setFieldsValue
-    form.setFieldsValue({ file: fileList[0].originFileObj });
+    else
+      setFileList([])
   };
 
   return (
@@ -154,6 +157,23 @@ export const ProductsUpdate = React.memo(({ isOpen, onClose, id }: IUpdateProduc
           </Row>
           <Row>
             <Col md={24}>
+              <Form.Item label="Thời hạn" rules={[{ required: true, message: 'Hãy chọn thời hạn' }]} name={'durationId'}>
+                <Select filterOption={filterOption} options={durationsOption} className="w-100" size="large" placeholder="Chọn thời hạn" />
+              </Form.Item>
+            </Col>
+          </Row>
+          <Row>
+            <Col md={24}>
+              <Form.Item
+                label="Ghi chú sản phẩm"
+                name="note"
+              >
+                <ReactQuill theme="snow" modules={modules} />
+              </Form.Item>
+            </Col>
+          </Row>
+          <Row>
+            <Col md={24}>
               <Form.Item
                 label="Mô tả sản phẩm"
                 name="description"
@@ -166,13 +186,12 @@ export const ProductsUpdate = React.memo(({ isOpen, onClose, id }: IUpdateProduc
           <Form.Item
             label="Tải lên ảnh sản phẩm"
             name="file"
-            rules={[{ required: true, message: "Vui lòng tải lên ảnh!" }]}
           >
             <Upload
               listType="picture-card"
               maxCount={1}
+              fileList={fileList}
               beforeUpload={() => false} // Ngăn Upload gửi request
-              onPreview={handlePreviewImage}
               onChange={handleChangeImage} // Cập nhật Form
             >
               <div className="d-flex justify-content-center align-items-center gap-2">
@@ -180,17 +199,6 @@ export const ProductsUpdate = React.memo(({ isOpen, onClose, id }: IUpdateProduc
                 <div>Upload</div>
               </div>
             </Upload>
-            {previewImage && (
-              <Image
-                prefixCls="d-flex justify-content-center"
-                preview={{
-                  visible: previewOpen,
-                  onVisibleChange: (visible) => setPreviewOpen(visible),
-                  afterOpenChange: (visible) => !visible && setPreviewImage(''),
-                }}
-                src={previewImage}
-              />
-            )}
           </Form.Item>
           <Form.Item>
             <Row className="action mt-3" justify="end">
