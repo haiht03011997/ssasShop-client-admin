@@ -12,14 +12,14 @@ import { Button, Input, Space, Tooltip } from 'antd';
 import Title from 'antd/es/typography/Title';
 import ModalConfirmComponent from 'app/shared/component/modal/confirm';
 import TableComponent from 'app/shared/component/table/table';
-import { deleteEntity, getEntities } from '../duration.reducer';
+import { deleteEntity, getEntities } from '../campaign.reducer';
 import { columns } from './config';
 import { OrderByType } from 'app/shared/model/enum/order-type.enum';
-import DurationsUpdate from '../form/update-durations';
+import CampaignsUpdate from '../form/update-campaigns';
 
 const { Search } = Input;
 
-export const Durations = () => {
+export const Campaigns = () => {
   const dispatch = useAppDispatch();
 
   const pageLocation = useLocation();
@@ -30,9 +30,9 @@ export const Durations = () => {
     overridePaginationStateWithQueryParams(getPaginationState(pageLocation, ITEMS_PER_PAGE, 'lastModifiedDate', DESC), pageLocation.search),
   );
 
-  const durationsList = useAppSelector(state => state.durations.entities);
-  const loading = useAppSelector(state => state.durations.loading);
-  const totalItems = useAppSelector(state => state.durations.totalItems);
+  const campaignsList = useAppSelector(state => state.campaigns.entities);
+  const loading = useAppSelector(state => state.campaigns.loading);
+  const totalItems = useAppSelector(state => state.campaigns.totalItems);
 
   const [visibleConfirmDelete, setVisibleConfirmDelete] = useState(false);
   const [isOpenModalForm, setOpenModalForm] = useState(false);
@@ -139,7 +139,7 @@ export const Durations = () => {
 
   return (
     <Container className="view">
-      <Title level={3}>Danh sách loại thời hạn dịch vụ</Title>
+      <Title level={3}>Danh sách chiến dịch giảm giá</Title>
       <div className="table">
         <div className="header">
           <Space className="search">
@@ -159,7 +159,7 @@ export const Durations = () => {
           </Space>
         </div>
         <TableComponent
-          data={durationsList}
+          data={campaignsList}
           total={totalItems}
           isFetching={loading}
           columns={columnConfig}
@@ -168,17 +168,17 @@ export const Durations = () => {
           }}
         />
       </div>
-      <DurationsUpdate isOpen={isOpenModalForm} id={recordSelected?.id} onClose={handleCloseModal} />
+      <CampaignsUpdate isOpen={isOpenModalForm} id={recordSelected?.id} onClose={handleCloseModal} />
       <ModalConfirmComponent
         visible={visibleConfirmDelete}
         onCancel={() => {
           setVisibleConfirmDelete(false);
         }}
         onConfirm={handleConfirmDelete}
-        title={`Bạn có muốn xóa loại dịch vụ ${recordSelected?.name}`}
+        title={`Bạn có muốn xóa chiến dịch giảm giá${recordSelected?.name}`}
       />
     </Container>
   );
 };
 
-export default Durations;
+export default Campaigns;

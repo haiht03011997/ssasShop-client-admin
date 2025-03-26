@@ -1,0 +1,24 @@
+.form-horizontal {
+  position: relative;
+
+  &:not(:last-child) {
+    margin-top: 10px;
+    padding-bottom: 1rem;
+    border-bottom: 1px solid var(--bs-gray-400);
+  }
+
+  .minus-circle-outlined {
+    position: absolute;
+    right: 0;
+    top: 45px;
+    color: var(--bs-red);
+  }
+}
+
+.plus-circle-outlined {
+  color: var(--bs-blue);
+}
+
+.action-form-horizontal {
+  gap: 10px;
+}

@@ -143,12 +143,12 @@ export const Categories = () => {
       <div className="table">
         <div className="header">
           <Space className="search">
-            <Search allowClear placeholder="Nhập giá trị tìm kiếm" onSearch={handleFreeTextSearchQuery} enterButton />
+            <Search size='large' allowClear placeholder="Nhập giá trị tìm kiếm" onSearch={handleFreeTextSearchQuery} enterButton />
           </Space>
           <Space>
             <Button
               className="filter"
-              type="primary"
+              type="primary" size='large'
               onClick={() => {
                 handleOpenModal();
               }}

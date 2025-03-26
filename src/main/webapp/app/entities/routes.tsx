@@ -6,6 +6,7 @@ import User from './account';
 import Categories from './category';
 import Products from './product';
 import Durations from './duration';
+import Campaigns from './campaign';
 
 /* jhipster-needle-add-route-import - JHipster will add routes here */
 
@@ -18,6 +19,7 @@ export default () => {
         <Route path="categories/*" element={<Categories />} />
         <Route path="products/*" element={<Products />} />
         <Route path="durations/*" element={<Durations />} />
+        <Route path="campaigns/*" element={<Campaigns />} />
         {/* jhipster-needle-add-route-path - JHipster will add routes here */}
       </ErrorBoundaryRoutes>
     </div>

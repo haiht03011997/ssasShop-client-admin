@@ -8,25 +8,24 @@ import {
   IOption,
 } from 'app/shared/reducers/reducer.utils';
 import { api } from 'app/config/axios-interceptor';
-import { ICategory, defaultValue } from 'app/shared/model/category.model';
+import { ICampaign, defaultValue } from 'app/shared/model/campaign.model';
 
-const initialState: EntityState<ICategory> = {
+const initialState: EntityState<ICampaign> = {
   loading: false,
   errorMessage: null,
   entities: [],
-  options: [],
   entity: defaultValue,
   updating: false,
   totalItems: 0,
   updateSuccess: false,
 };
 
-const apiUrl = 'api/admin/product';
+const apiUrl = 'api/admin/discountCampaign';
 
 // Actions
 
-export const getEntities = createAsyncThunk('products/fetch_entity_list', async ({ searchText, page, size, sort, filters }: IQueryParams) => {
-  return api.get<ICategory[]>(apiUrl, {
+export const getEntities = createAsyncThunk('campaigns/fetch_entity_list', async ({ searchText, page, size, sort, filters }: IQueryParams) => {
+  return api.get<ICampaign[]>(apiUrl, {
     params: {
       searchText,
       pageNum: page,
@@ -38,50 +37,42 @@ export const getEntities = createAsyncThunk('products/fetch_entity_list', async 
   });
 });
 
-export const getAllEntities = createAsyncThunk('products/fetch_select_box_entity', async () => {
+export const getAllEntities = createAsyncThunk('campaigns/fetch_select_box_entity', async () => {
   return api.get<IOption[]>(`${apiUrl}/select-box`);
 });
 
 export const getEntity = createAsyncThunk(
-  'products/fetch_entity',
+  'campaigns/fetch_entity',
   async (id: string | number) => {
     const requestUrl = `${apiUrl}/${id}`;
-    return api.get<ICategory>(requestUrl);
+    return api.get<ICampaign>(requestUrl);
   },
   { serializeError: serializeAxiosError },
 );
 
 export const createEntity = createAsyncThunk(
-  'products/create_entity',
-  async (entity: ICategory, thunkAPI) => {
-    const result = await api.post<ICategory>(apiUrl, entity, {
-      headers: {
-        'Content-Type': 'multipart/form-data',
-      },
-    });
+  'campaigns/create_entity',
+  async (entity: ICampaign, thunkAPI) => {
+    const result = await api.post<ICampaign>(apiUrl, cleanEntity(entity));
     return result;
   },
   { serializeError: serializeAxiosError },
 );
 
 export const updateEntity = createAsyncThunk(
-  'products/update_entity',
-  async (entity: ICategory, thunkAPI) => {
-    const result = await api.put<ICategory>(`${apiUrl}`, entity, {
-      headers: {
-        'Content-Type': 'multipart/form-data',
-      },
-    });
+  'campaigns/update_entity',
+  async (entity: ICampaign, thunkAPI) => {
+    const result = await api.put<ICampaign>(`${apiUrl}`, cleanEntity(entity));
     return result;
   },
   { serializeError: serializeAxiosError },
 );
 
 export const deleteEntity = createAsyncThunk(
-  'products/delete_entity',
+  'campaigns/delete_entity',
   async (id: string | number, thunkAPI) => {
     const requestUrl = `${apiUrl}/${id}`;
-    const result = await api.delete<ICategory>(requestUrl);
+    const result = await api.delete<ICampaign>(requestUrl);
     return result;
   },
   { serializeError: serializeAxiosError },
@@ -89,8 +80,8 @@ export const deleteEntity = createAsyncThunk(
 
 // slice
 
-export const CategorySlice = createEntitySlice({
-  name: 'products',
+export const CampaignSlice = createEntitySlice({
+  name: 'campaigns',
   initialState,
   extraReducers(builder) {
     builder
@@ -140,7 +131,7 @@ export const CategorySlice = createEntitySlice({
   },
 });
 
-export const { reset } = CategorySlice.actions;
+export const { reset } = CampaignSlice.actions;
 
 // Reducer
-export default CategorySlice.reducer;
+export default CampaignSlice.reducer;
