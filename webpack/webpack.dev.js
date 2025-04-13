@@ -99,7 +99,7 @@ module.exports = async options =>
         },
       ),
       new WebpackNotifierPlugin({
-        title: 'Quản lý kế hoạch',
+        title: 'Tai Khoan AI',
       }),
     ].filter(Boolean),
   });

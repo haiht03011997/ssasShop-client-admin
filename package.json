@@ -1,13 +1,13 @@
 {
-  "name": "QLKH",
+  "name": "Tai Khoan AI",
   "version": "0.0.1-SNAPSHOT",
   "private": true,
-  "description": "Description for Quản lý kế hoạch",
+  "description": "Description for Tai Khoan AI",
   "license": "UNLICENSED",
   "scripts": {
     "build": "npm run webapp:prod --",
     "build-watch": "concurrently 'npm run webapp:build:dev -- --watch'",
-    "ci:frontend:QLKH": "npm run webapp:build:$npm_package_config_default_environment && npm run test-ci",
+    "ci:frontend:Tai Khoan AI": "npm run webapp:build:$npm_package_config_default_environment && npm run test-ci",
     "clean-www": "rimraf target/classes/static/",
     "cleanup": "rimraf target/",
     "jest": "jest --coverage --logHeapUsage --maxWorkers=2 --config jest.conf.js",

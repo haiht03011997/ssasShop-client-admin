@@ -12,6 +12,7 @@ const createAxiosInstance = baseUrl => {
   });
 
   const onRequestSuccess = config => {
+    config.headers['ngrok-skip-browser-warning'] = 'true';
     const token = Cookies.get('authentication-token');
     if (token) {
       config.headers.Authorization = `Bearer ${token}`;

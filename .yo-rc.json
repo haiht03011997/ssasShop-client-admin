@@ -1,6 +1,6 @@
 {
   "generator-jhipster": {
-    "baseName": "QLKH",
+    "baseName": "Tai Khoan AI",
     "clientFramework": "react",
     "clientTestFrameworks": [],
     "clientTheme": "none",
@@ -9,7 +9,10 @@
     "enableTranslation": true,
     "entities": [],
     "jhipsterVersion": "8.1.0",
-    "languages": ["vi", "en"],
+    "languages": [
+      "vi",
+      "en"
+    ],
     "microfrontend": null,
     "microfrontends": [],
     "nativeLanguage": "vi",

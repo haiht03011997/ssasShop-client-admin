@@ -1,10 +1,10 @@
 import { PlusOutlined } from '@ant-design/icons';
-import { Button, Col, Form, Input, InputNumber, Modal, Row, Select, Upload } from 'antd';
+import { Button, Col, Form, GetProp, Input, InputNumber, Modal, Row, Select, Upload, UploadProps } from 'antd';
 import Title from 'antd/es/typography/Title';
 import { useAppDispatch, useAppSelector } from 'app/config/store';
 import { getAllEntities as getSelectOptionCategory } from 'app/entities/category/category.reducer';
 import { getAllEntities as getSelectOptionDuration } from 'app/entities/duration/duration.reducer';
-import { formatCurrencyVND, parseCurrencyVND } from 'app/shared/util/help';
+import { formatCurrencyVND, getBase64, parseCurrencyVND } from 'app/shared/util/help';
 import { filterOption } from 'app/shared/util/select-filter';
 import React, { useEffect, useMemo, useState } from 'react';
 import ReactQuill from 'react-quill';
@@ -12,11 +12,14 @@ import 'react-quill/dist/quill.snow.css';
 import { Container } from 'reactstrap';
 import { createEntity, getEntity, updateEntity } from '../product.reducer';
 import './style.scss';
+
 type IUpdateProducts = {
   isOpen: boolean;
   onClose: (isReload?: boolean) => void;
   id?: string;
 };
+
+type FileType = Parameters<GetProp<UploadProps, 'beforeUpload'>>[0];
 
 export const ProductsUpdate = React.memo(({ isOpen, onClose, id }: IUpdateProducts) => {
   const dispatch = useAppDispatch();
@@ -53,6 +56,7 @@ export const ProductsUpdate = React.memo(({ isOpen, onClose, id }: IUpdateProduc
   }), []);
 
   useEffect(() => {
+    setFileList([]);
     innitData();
   }, [isOpen]);
 
@@ -105,11 +109,14 @@ export const ProductsUpdate = React.memo(({ isOpen, onClose, id }: IUpdateProduc
 
   const handleChangeImage = ({ fileList: newArrays }) => {
     if (newArrays && newArrays.length > 0) {
+      // Tạo preview nếu chưa có
+      if (!newArrays[0].preview) {
+        newArrays[0].preview = URL.createObjectURL(newArrays[0].originFileObj as FileType);
+      }
       // Lưu giá trị vào Form.Item bằng setFieldsValue
       form.setFieldsValue({ file: newArrays[0].originFileObj });
-      setFileList(newArrays[0].url || (newArrays[0].preview as string));
+      setFileList(newArrays);
     }
-
     else
       setFileList([])
   };
@@ -180,6 +187,20 @@ export const ProductsUpdate = React.memo(({ isOpen, onClose, id }: IUpdateProduc
                 rules={[{ required: true, message: "Vui lòng nhập mô tả" }]}
               >
                 <ReactQuill theme="snow" modules={modules} />
+              </Form.Item>
+            </Col>
+          </Row>
+          <Row>
+            <Col md={24}>
+              <Form.Item
+                label="Thẻ tag sản phẩm"
+                name="tags"
+                rules={[{ required: true, message: "Vui lòng nhập thẻ tag" }]}
+              >
+                <Input
+                  className="w-100"
+                  size="large"
+                  placeholder="Nhập thẻ tag sản phẩm"/>
               </Form.Item>
             </Col>
           </Row>
