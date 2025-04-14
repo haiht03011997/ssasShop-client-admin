@@ -5,6 +5,6 @@ services:
       dockerfile: Dockerfile
     container_name: react-app-admin
     ports:
-      - "6000:80"
+      - "8000:80"
     environment:
       - NODE_ENV=production

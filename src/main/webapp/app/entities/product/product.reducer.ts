@@ -53,12 +53,8 @@ export const getEntity = createAsyncThunk(
 
 export const createEntity = createAsyncThunk(
   'products/create_entity',
-  async (entity: ICategory, thunkAPI) => {
-    const result = await api.post<ICategory>(apiUrl, entity, {
-      headers: {
-        'Content-Type': 'multipart/form-data',
-      },
-    });
+  async (entity: any, thunkAPI) => {
+    const result = await api.post<ICategory>(apiUrl, entity);
     return result;
   },
   { serializeError: serializeAxiosError },
@@ -66,8 +62,19 @@ export const createEntity = createAsyncThunk(
 
 export const updateEntity = createAsyncThunk(
   'products/update_entity',
-  async (entity: ICategory, thunkAPI) => {
-    const result = await api.put<ICategory>(`${apiUrl}`, entity, {
+  async (entity: any, thunkAPI) => {
+    const result = await api.put<ICategory>(`${apiUrl}`, entity);
+    return result;
+  },
+  { serializeError: serializeAxiosError },
+);
+
+export const uploadFile = createAsyncThunk(
+  'products/upload_file',
+  async (file: any, thunkAPI) => {
+    const formData = new FormData();
+    formData.append('file', file);
+    const result = await api.post<ICategory>(`${apiUrl}/upload`, formData, {
       headers: {
         'Content-Type': 'multipart/form-data',
       },

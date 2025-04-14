@@ -4,13 +4,13 @@ import Title from 'antd/es/typography/Title';
 import { useAppDispatch, useAppSelector } from 'app/config/store';
 import { getAllEntities as getSelectOptionCategory } from 'app/entities/category/category.reducer';
 import { getAllEntities as getSelectOptionDuration } from 'app/entities/duration/duration.reducer';
-import { formatCurrencyVND, getBase64, parseCurrencyVND } from 'app/shared/util/help';
+import { formatCurrencyVND, getBase64, parseCurrencyVND, removeVietnameseTones } from 'app/shared/util/help';
 import { filterOption } from 'app/shared/util/select-filter';
 import React, { useEffect, useMemo, useState } from 'react';
 import ReactQuill from 'react-quill';
 import 'react-quill/dist/quill.snow.css';
 import { Container } from 'reactstrap';
-import { createEntity, getEntity, updateEntity } from '../product.reducer';
+import { createEntity, getEntity, updateEntity, uploadFile } from '../product.reducer';
 import './style.scss';
 
 type IUpdateProducts = {
@@ -86,19 +86,11 @@ export const ProductsUpdate = React.memo(({ isOpen, onClose, id }: IUpdateProduc
   };
 
   const handleSubmit = values => {
-    const formData = new FormData();
     const oldData = !isNew && productsEntity;
     const entity = {
       ...oldData,
       ...values,
     };
-
-    // Thêm các trường vào FormData
-    for (const key in entity) {
-      if (Object.prototype.hasOwnProperty.call(entity, key)) {
-        formData.append(key, entity[key]); // Thêm các trường khác
-      }
-    }
 
     if (isNew) {
       dispatch(createEntity(entity));
@@ -107,15 +99,24 @@ export const ProductsUpdate = React.memo(({ isOpen, onClose, id }: IUpdateProduc
     }
   };
 
-  const handleChangeImage = ({ fileList: newArrays }) => {
+  const handleChangeImage = async ({ fileList: newArrays }) => {
     if (newArrays && newArrays.length > 0) {
-      // Tạo preview nếu chưa có
-      if (!newArrays[0].preview) {
-        newArrays[0].preview = URL.createObjectURL(newArrays[0].originFileObj as FileType);
-      }
+      const file = newArrays[0]?.originFileObj;
+      if (file) {
+      const response = await dispatch(uploadFile(file)).unwrap(); // gọi thunk
       // Lưu giá trị vào Form.Item bằng setFieldsValue
-      form.setFieldsValue({ file: newArrays[0].originFileObj });
-      setFileList(newArrays);
+      form.setFieldsValue({ imageUrl: response.data });
+      // Cập nhật fileList nếu bạn muốn hiển thị preview
+      setFileList([
+        {
+          uid: file.uid,
+          name: file.name,
+          status: 'done',
+          url: `${SERVER_API}${response.data as string}`, // Giả sử response là URL của ảnh sau khi upload
+        },
+      ]);
+    }
+      // Tạo preview nếu chưa có
     }
     else
       setFileList([])
